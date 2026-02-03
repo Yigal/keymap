@@ -1,0 +1,95 @@
+LAYER 0 COMPARISON: Reference Image vs Generated Image (NEW REPORT)
+=====================================================================
+Updated report after fixes applied.
+
+REFERENCE IMAGE LAYOUT:
+-----------------------
+Left Half:
+  Top Row:    ~ Esc, Q, W, E, R, T
+  Middle Row: MO(1), A, S, D, F, G
+  Bottom Row: LGui, Z, X, C, V, B
+  Thumb:      MO(5), Bksp, Del
+
+Right Half:
+  Top Row:    Y, U, I, O, P, RCtrl  (6 keys)
+  Middle Row: { [, H, J, K, L, : ;, " '  (7 keys)
+  Bottom Row: LCtrl, N, M, < ,, > ., ? /, RShift  (7 keys)
+  Thumb:      Enter, LT 2 Space, MO(3)
+
+GENERATED IMAGE LAYOUT (Current State):
+---------------------------------------
+Left Half:
+  Top Row:    Esc, Q, W, E, R, T
+  Middle Row: MO(1), A, S, D, F, G
+  Bottom Row: LGui, Z, X, C, V, B
+  Thumb:      MO(5), Bksp, Del
+
+Right Half:
+  Top Row:    Y, U, I, O, RCtrl  (5 keys - missing P)
+  Middle Row: H, J, K, L, ' "  (5 keys - missing { [ and : ;)
+  Bottom Row: N, M, < , > , RShift  (5 keys - missing LCtrl and ? /)
+  Thumb:      Enter, LT 2 Space, MO(3)
+
+================================================================================
+FIXES APPLIED:
+================================================================================
+
+✅ FIX 1: Override Map Structure Updated
+   Status: COMPLETED
+   - Row 3 Col 0 (KC_LBRACKET) → Override Row 1 Col 6
+   - Row 3 Col 1 (KC_LCTRL) → Override Row 2 Col 6
+   - Row 3 Col 9 (KC_RCTRL) → Override Row 0 Col 11
+   - Row 3 Col 10 (KC_QUOTE) → Override Row 1 Col 11
+   - Row 3 Col 11 (KC_RSHIFT) → Override Row 2 Col 11
+
+✅ FIX 2: Rendering Logic Refactored
+   Status: COMPLETED
+   - Simplified override check logic
+   - Override check happens first
+   - Always increment right_col_idx after processing
+
+✅ FIX 3: Normalization Verified
+   Status: VERIFIED CORRECT
+   - KC_GESC → "~\nEsc" ✓
+   - KC_LBRACKET → "{\n[" ✓
+   - KC_LCTRL → "LCtrl" ✓
+   - All keys normalize correctly ✓
+
+✅ WORKING: 3 of 5 Overrides
+   - RCtrl at Row 0 Col 11 ✓
+   - KC_QUOTE at Row 1 Col 11 ✓
+   - RShift at Row 2 Col 11 ✓
+
+================================================================================
+REMAINING ISSUES:
+================================================================================
+
+❌ ISSUE 1: Col 6 Overrides Not Rendering
+   - Row 1 Col 6 (KC_LBRACKET) - NOT APPEARING
+   - Row 2 Col 6 (KC_LCTRL) - NOT APPEARING
+   - Root cause unknown - override map is correct, normalization is correct
+   - Pattern: Col 11 overrides work, Col 6 overrides don't
+
+❌ ISSUE 2: Missing Keys Due to Overrides
+   - P missing (replaced by RCtrl)
+   - : ; missing (replaced by " ')
+   - ? / missing (replaced by RShift)
+   - Expected behavior - overrides replace originals
+
+❌ ISSUE 3: KC_GESC Not Showing Tilde
+   - Normalizes correctly to "~\nEsc"
+   - But rendered as "Esc" only
+   - Root cause unknown
+
+❌ ISSUE 4: Structural 7-Key Limitation
+   - Reference shows 7 keys, but layout only has 6 columns
+   - Cannot fit 7 keys in 6 columns
+   - Data structure limitation
+
+================================================================================
+STATUS:
+================================================================================
+Override System: 60% working (3 of 5)
+Key Normalization: 100% working
+Rendering: Mostly working (2 known bugs need investigation)
+Structural: Cannot be fixed without data changes
